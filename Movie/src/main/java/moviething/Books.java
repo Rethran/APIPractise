@@ -27,6 +27,8 @@ import io.jsonwebtoken.security.Keys;
 
 public class Books {
 	private static final String SEARCH_BY_ISBN = "http://openlibrary.org/api/books?bibkeys=ISBN";
+	
+	//this method has String parameter which returns request from website 
 	public static String sendGetBook(String requestUrl) throws IOException {
 		StringBuffer response = new StringBuffer();		
 		try {
@@ -50,29 +52,29 @@ public class Books {
 		}
 		return response.toString();
 	}
-	public Books() {
-		
-	}
+	
+	//this method search Book by ISBN with String parameter and return it as json
 	public static String searchBookByISBN(String ISBN) throws IOException {
 	
 		String secret = "asdfSFS34wfsdfsdfSDSD32dfsddDDerQSNCK34SOWEK5354fdgdf4";
 		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS512;
 		Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(secret),
-				SignatureAlgorithm.HS256.getJcaName());
+			SignatureAlgorithm.HS256.getJcaName());
 		Instant now = Instant.now();
 		
 		
-		    String jwtToken = Jwts.builder()
-				.setSubject(ISBN)
-				.setId(UUID.randomUUID().toString())
-				.setIssuedAt(Date.from(now))
-				.setExpiration(Date.from(now.plus(51, ChronoUnit.MINUTES)))
-				.signWith(hmacKey)
-				.compact();
-			String requestURL = SEARCH_BY_ISBN
+		String jwtToken = Jwts.builder()
+			.setSubject(ISBN)
+			.setId(UUID.randomUUID().toString())
+			.setIssuedAt(Date.from(now))
+			.setExpiration(Date.from(now.plus(51, ChronoUnit.MINUTES)))
+			.signWith(hmacKey)
+			.compact();
+		String requestURL = SEARCH_BY_ISBN
 				    .replaceAll("ISBN", parseJwt(jwtToken).getBody().getSubject());
 	return sendGetBook(requestURL);
 	}
+	//this method parses JsonWebTokebn and return it as Jws<Claims>
 	public static Jws<Claims> parseJwt(String jwtString){
 	String secret = "asdfSFS34wfsdfsdfSDSD32dfsddDDerQSNCK34SOWEK5354fdgdf4";
     Key hmacKey = new SecretKeySpec(Base64.getDecoder().decode(secret), 
@@ -87,7 +89,7 @@ public class Books {
 	}
 
 	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
+		// example use case of Books.java
 	String jsonResponse = Books.searchBookByISBN("0201558025");
 	System.out.println(jsonResponse);
 	}

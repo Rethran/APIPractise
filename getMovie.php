@@ -9,7 +9,7 @@
     </title> 
 </head> 
 <body> 
-<?php echo shell_exec("java -cp uber-Movie-0.0.1-SNAPSHOT.jar && moviething.moviemain") ?>
+<?php echo shell_exec('java -cp uber-Movie-0.0.1-SNAPSHOT.jar moviething.Movie') ?>
 
 </body>
   
